@@ -24,6 +24,7 @@ ruleTester.run("no-objects-in-deps", rule, {
                     messageId: Messages.NO_OBJECTS_IN_DEPENDENCIES,
                 },
             ],
+            output: "useEffect(() => {}, [JSON.stringify({ NIMA: 'labs' })])",
         },
 
         // New expression in dependency array
@@ -34,6 +35,7 @@ ruleTester.run("no-objects-in-deps", rule, {
                     messageId: Messages.NO_OBJECTS_IN_DEPENDENCIES,
                 },
             ],
+            output: "useEffect(() => {}, [JSON.stringify(new Date())])",
         },
 
         // useCallback with object
@@ -44,6 +46,7 @@ ruleTester.run("no-objects-in-deps", rule, {
                     messageId: Messages.NO_OBJECTS_IN_DEPENDENCIES,
                 },
             ],
+            output: "useCallback(() => {}, [JSON.stringify({ NIMA: 'Enterprises' })])",
         },
 
         // Multiple invalid dependencies
@@ -57,6 +60,7 @@ ruleTester.run("no-objects-in-deps", rule, {
                     messageId: Messages.NO_OBJECTS_IN_DEPENDENCIES,
                 },
             ],
+            output: "useEffect(() => {}, [JSON.stringify({ foo: 'bar' }), JSON.stringify(new Set())])",
         },
 
         // React namespace with object
@@ -67,6 +71,7 @@ ruleTester.run("no-objects-in-deps", rule, {
                     messageId: Messages.NO_OBJECTS_IN_DEPENDENCIES,
                 },
             ],
+            output: "React.useEffect(() => {}, [JSON.stringify({ test: true })])",
         },
 
         // Bracket notation with object
@@ -77,6 +82,7 @@ ruleTester.run("no-objects-in-deps", rule, {
                     messageId: Messages.NO_OBJECTS_IN_DEPENDENCIES,
                 },
             ],
+            output: "React['useCallback'](() => {}, [JSON.stringify({ key: 'value' })])",
         },
     ],
 

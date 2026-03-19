@@ -21,6 +21,7 @@ export const config: {
         recommended: false,
         url: "https://github.com/NIMA-Enterprises/eslint-plugin-nima/blob/main/documentation/rules/no-objects-in-deps.md",
     },
+    fixable: "code",
     messages: {
         [Messages.NO_OBJECTS_IN_DEPENDENCIES]:
             "NIMA: Objects inside of dependency arrays aren't allowed. Try doing JSON.stringify({{ object }}).",

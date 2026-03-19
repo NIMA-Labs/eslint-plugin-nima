@@ -1,6 +1,7 @@
 import { HOOKS_WITH_DEPS } from "@constants/hooks";
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
+import ts from "typescript";
 
 import { Messages, type Options } from "./config";
 
@@ -34,17 +35,14 @@ export const create = (context: RuleContext<Messages, Options>) => {
     };
 
     const isObjectType = (element: TSESTree.Expression): boolean => {
-        // Always report direct object literals
         if (element.type === AST_NODE_TYPES.ObjectExpression) {
             return true;
         }
 
-        // Always report new expressions (new Date(), etc.)
         if (element.type === AST_NODE_TYPES.NewExpression) {
             return true;
         }
 
-        // Skip literals, arrays, and functions - these are safe
         if (
             element.type === AST_NODE_TYPES.Literal ||
             element.type === AST_NODE_TYPES.TemplateLiteral ||
@@ -55,12 +53,10 @@ export const create = (context: RuleContext<Messages, Options>) => {
             return false;
         }
 
-        // If no TypeScript info, be conservative and don't report
         if (!checker || !services?.esTreeNodeToTSNodeMap) {
             return false;
         }
 
-        // Use TypeScript type checker for identifiers and other expressions
         try {
             const tsNode = services.esTreeNodeToTSNodeMap.get(element);
             if (!tsNode) {
@@ -72,35 +68,56 @@ export const create = (context: RuleContext<Messages, Options>) => {
                 return false;
             }
 
-            const typeString = checker.typeToString(type);
+            const isPrimitiveType = (t: ts.Type): boolean => {
+                const flags = t.getFlags();
 
-            // Primitives are safe
-            const primitiveTypes = [
-                "string",
-                "number",
-                "boolean",
-                "symbol",
-                "bigint",
-                "null",
-                "undefined",
-                "void",
-            ];
+                if (
+                    flags &
+                    (ts.TypeFlags.String |
+                        ts.TypeFlags.Number |
+                        ts.TypeFlags.Boolean |
+                        ts.TypeFlags.BigInt |
+                        ts.TypeFlags.ESSymbol |
+                        ts.TypeFlags.Null |
+                        ts.TypeFlags.Undefined |
+                        ts.TypeFlags.Void |
+                        ts.TypeFlags.StringLiteral |
+                        ts.TypeFlags.NumberLiteral |
+                        ts.TypeFlags.BooleanLiteral |
+                        ts.TypeFlags.BigIntLiteral |
+                        ts.TypeFlags.EnumLiteral)
+                ) {
+                    return true;
+                }
 
-            if (primitiveTypes.includes(typeString)) {
+                if (t.isUnion()) {
+                    return t.types.every(isPrimitiveType);
+                }
+
+                if (t.isIntersection()) {
+                    return false;
+                }
+                const typeStr = checker.typeToString(t);
+                if (typeStr.startsWith("`") && typeStr.endsWith("`")) {
+                    return true;
+                }
+
+                return false;
+            };
+
+            if (isPrimitiveType(type)) {
                 return false;
             }
 
-            // Check if it's a function type
             if (type.getCallSignatures().length > 0) {
                 return false;
             }
 
-            // Check if it's an array type
+            const typeString = checker.typeToString(type);
             if (typeString.endsWith("[]") || typeString.startsWith("Array<")) {
                 return false;
             }
 
-            // If it has object-like properties, it's an object
             const properties = type.getProperties();
             if (properties.length > 0) {
                 return true;
@@ -108,17 +125,19 @@ export const create = (context: RuleContext<Messages, Options>) => {
 
             return false;
         } catch {
-            // If type checking fails, don't report to avoid false positives
             return false;
         }
     };
 
     const checkDep = (element: TSESTree.Expression) => {
         if (isObjectType(element)) {
+            const text = context.sourceCode.getText(element);
             context.report({
                 data: {
-                    object: context.sourceCode.getText(element),
+                    object: text,
                 },
+                fix: (fixer) =>
+                    fixer.replaceText(element, `JSON.stringify(${text})`),
                 messageId: Messages.NO_OBJECTS_IN_DEPENDENCIES,
                 node: element,
             });
