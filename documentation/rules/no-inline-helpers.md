@@ -6,11 +6,11 @@ A **one-off wrapper** is a named function that is used exactly once and whose bo
 
 ## What the rule checks
 
-Inside any component (PascalCase function, including `memo`/`forwardRef` wrappers) or hook (`use*` function):
+Inside any component (PascalCase function, including `memo`/`forwardRef` wrappers and anonymous default exports) or hook (`use*` function):
 
 1. **Nested components** — a PascalCase function declared inside another component or hook is always reported. It becomes a new component on every render, so React remounts its whole subtree.
 2. **One-off wrappers** — a named function is reported when all of these hold:
-    - it is referenced exactly once,
+    - it is referenced exactly once (`typeof fn` in a type does not count),
     - its body is a single statement (or an expression body),
     - it spans at most `maxWrapperLines` lines.
 
@@ -22,7 +22,7 @@ Inside any component (PascalCase function, including `memo`/`forwardRef` wrapper
 - Multi-statement functions and single statements longer than `maxWrapperLines`.
 - Functions marked with the `"worklet"` directive (Reanimated).
 - Functions wrapped in `useCallback` (they declare a referential-stability need).
-- Functions a hook returns (`return close`, `return { close }`, `return [value, setValue] as const`).
+- Functions a hook returns (`return close`, `return { close }`, `return { ...state, close }`, `return isOpen ? { close } : null`, `return [value, setValue] as const`). A function returned from inside a `useMemo` callback (`return useMemo(() => ({ close }), [])`) is still reported; wrap it in `useCallback` or return it directly.
 - Unnamed functions: inline callbacks, `.map((item) => ...)`, `onPress={() => ...}`, effect bodies.
 
 ## Options

@@ -15,6 +15,45 @@ ruleTester.run("no-inline-helpers", rule, {
     invalid: [
         {
             code: `
+const Row = ({ order }) => {
+    function formatSide(side) {
+        return side.toUpperCase();
+    }
+    return <Text>{formatSide(order.side)}</Text>;
+};`,
+            errors: [{ messageId: Messages.NO_INLINE_HELPER }],
+            name: "Function declaration that reads its parameters",
+        },
+        {
+            code: `
+const Row = ({ order }) => {
+    const label = () => order.id;
+    const typed: typeof label = label;
+    return <Text>{typed()}</Text>;
+};`,
+            errors: [{ messageId: Messages.NO_INLINE_HELPER }],
+            name: "Type-only references do not count as uses",
+        },
+        {
+            code: `
+export default memo(({ order }) => {
+    const label = () => order.id;
+    return <Text>{label()}</Text>;
+});`,
+            errors: [{ messageId: Messages.NO_INLINE_HELPER }],
+            name: "Anonymous default-exported memo component",
+        },
+        {
+            code: `
+export default function ({ order }) {
+    const label = () => order.id;
+    return <Text>{label()}</Text>;
+}`,
+            errors: [{ messageId: Messages.NO_INLINE_HELPER }],
+            name: "Anonymous default-exported function component",
+        },
+        {
+            code: `
 const OrdersTable = ({ orders }) => {
     const handleExportCsv = () =>
         exportToCsv({
@@ -137,6 +176,22 @@ function OrderRow({ order }) {
         },
     ],
     valid: [
+        {
+            code: `
+const useModal = () => {
+    const close = () => setIsOpen(false);
+    return isOpen ? { close } : null;
+};`,
+            name: "Hook returns the function through a conditional",
+        },
+        {
+            code: `
+const useModal = () => {
+    const close = () => setIsOpen(false);
+    return { ...state, close };
+};`,
+            name: "Hook returns the function next to a spread",
+        },
         `
 const OrderRow = ({ order }) => {
     const onRefresh = () => {

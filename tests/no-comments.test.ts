@@ -25,12 +25,18 @@ ruleTester.run("no-comments", rule, {
             ],
         },
         {
-            code: "// @ts-expect-error broken types\nconst value = 1;",
-            errors: [{ messageId: Messages.NO_COMMENTS }],
-            options: [{ allow: [] }],
+            code: "#!/usr/bin/env node\n// setup\nconst value = 1;",
+            errors: [{ line: 2, messageId: Messages.NO_COMMENTS }],
+            name: "Only the shebang is exempt, not comments after it",
         },
     ],
     valid: [
+        "#!/usr/bin/env node\nconst value = 1;",
+        {
+            code: "// @ts-expect-error broken types\n// keep: generated\nconst value = 1;",
+            name: "Custom allow patterns add to the tooling defaults",
+            options: [{ allow: ["^\\s*keep:"] }],
+        },
         "const total = 1;",
         "// @ts-expect-error library types are wrong\nconst value = 1;",
         '/// <reference types="vite/client" />\nconst value = 1;',

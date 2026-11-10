@@ -6,6 +6,11 @@ const ruleTester = new RuleTester();
 ruleTester.run("no-named-types", rule, {
     invalid: [
         {
+            code: "namespace Orders { export type Side = string }",
+            errors: [{ messageId: Messages.NO_NAMED_TYPES }],
+            name: "Plain namespaces are not ambient",
+        },
+        {
             code: "type OrderRowProps = { id: string };",
             errors: [
                 {
@@ -37,6 +42,15 @@ ruleTester.run("no-named-types", rule, {
         },
     ],
     valid: [
+        {
+            code: "interface ImportMetaEnv { readonly VITE_API_URL: string }",
+            filename: "vite-env.d.ts",
+            name: "Declaration files are skipped",
+        },
+        {
+            code: "declare namespace Analytics { type Event = string }",
+            name: "Declared namespaces are ambient",
+        },
         "const OrderRow: React.FC<{ id: string }> = ({ id }) => null;",
         "declare module '@tanstack/react-router' { interface Register { router: typeof router } }",
         "declare global { interface Window { ethereum: unknown } }",

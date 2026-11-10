@@ -6,18 +6,22 @@ import { type defaultOptions, Messages } from "./config";
 export const create = (
     context: RuleContext<Messages, typeof defaultOptions>
 ) => {
-    const isAmbientDeclaration = ($node: TSESTree.Node) =>
-        context.sourceCode
-            .getAncestors($node)
-            .some(
-                (ancestor) =>
-                    ancestor.type === AST_NODE_TYPES.TSModuleDeclaration
-            );
+    const isDeclarationFile = context.filename.endsWith(".d.ts");
 
     const check = (
         $node: TSESTree.TSInterfaceDeclaration | TSESTree.TSTypeAliasDeclaration
     ) => {
-        if ($node.declare || isAmbientDeclaration($node)) {
+        const isAmbient =
+            $node.declare ||
+            context.sourceCode
+                .getAncestors($node)
+                .some(
+                    (ancestor) =>
+                        ancestor.type === AST_NODE_TYPES.TSModuleDeclaration &&
+                        (ancestor.declare || ancestor.kind === "global")
+                );
+
+        if (isDeclarationFile || isAmbient) {
             return;
         }
 

@@ -1,15 +1,27 @@
 import { AST_NODE_TYPES, type TSESTree } from "@typescript-eslint/utils";
 import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
+import { isComponentFunction } from "@utility/function-helpers";
 import {
     getDeclaredFunctionName,
     getFunctionDeclarator,
-    isComponentName,
+    isDefaultExported,
     isFunctionNode,
     isHookName,
     isWrappedIn,
 } from "@utility/react-helpers";
 
 import { type defaultOptions, Messages } from "./config";
+
+const RETURN_VALUE_CONTAINERS = new Set<string>([
+    AST_NODE_TYPES.ArrayExpression,
+    AST_NODE_TYPES.ConditionalExpression,
+    AST_NODE_TYPES.LogicalExpression,
+    AST_NODE_TYPES.ObjectExpression,
+    AST_NODE_TYPES.Property,
+    AST_NODE_TYPES.SpreadElement,
+    AST_NODE_TYPES.TSAsExpression,
+    AST_NODE_TYPES.TSSatisfiesExpression,
+]);
 
 const isWorklet = ($node: TSESTree.FunctionLike) =>
     $node.body?.type === AST_NODE_TYPES.BlockStatement &&
@@ -41,9 +53,13 @@ export const create = (
 
             const ownerName = getDeclaredFunctionName(ancestor);
 
+            if (!ownerName && isDefaultExported(ancestor)) {
+                return { name: "default export", node: ancestor };
+            }
+
             if (
                 ownerName &&
-                (isComponentName(ownerName) ||
+                (isComponentFunction(ownerName) ||
                     (checkHooks && isHookName(ownerName)))
             ) {
                 return { name: ownerName, node: ancestor };
@@ -53,7 +69,10 @@ export const create = (
         return null;
     };
 
-    const getReadReferences = ($node: TSESTree.FunctionLike) => {
+    const getValueReadReferences = (
+        $node: TSESTree.FunctionLike,
+        $name: string
+    ) => {
         const declarator = getFunctionDeclarator($node);
 
         if (!declarator) {
@@ -62,8 +81,14 @@ export const create = (
 
         return context.sourceCode
             .getDeclaredVariables(declarator)
+            .filter((variable) => variable.name === $name)
             .flatMap((variable) => variable.references)
-            .filter((reference) => reference.isRead());
+            .filter(
+                (reference) =>
+                    reference.isRead() &&
+                    reference.identifier.parent?.type !==
+                        AST_NODE_TYPES.TSTypeQuery
+            );
     };
 
     const isReturnedFromHook = (
@@ -85,13 +110,7 @@ export const create = (
 
         let container = $reference.identifier.parent;
 
-        while (
-            container?.type === AST_NODE_TYPES.Property ||
-            container?.type === AST_NODE_TYPES.ObjectExpression ||
-            container?.type === AST_NODE_TYPES.ArrayExpression ||
-            container?.type === AST_NODE_TYPES.TSAsExpression ||
-            container?.type === AST_NODE_TYPES.TSSatisfiesExpression
-        ) {
+        while (container && RETURN_VALUE_CONTAINERS.has(container.type)) {
             container = container.parent;
         }
 
@@ -114,7 +133,7 @@ export const create = (
             return;
         }
 
-        if (isComponentName(name)) {
+        if (isComponentFunction(name)) {
             context.report({
                 data: { name, owner: owner.name },
                 messageId: Messages.NESTED_COMPONENT,
@@ -127,7 +146,7 @@ export const create = (
             return;
         }
 
-        const readReferences = getReadReferences($node);
+        const readReferences = getValueReadReferences($node, name);
         const [onlyReference] = readReferences;
 
         if (

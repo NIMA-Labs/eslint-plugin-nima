@@ -1,4 +1,5 @@
 import { DEFAULT_ABBREVIATIONS } from "@constants/abbreviations";
+import { type TSESTree } from "@typescript-eslint/utils";
 import { RuleContext, type Scope } from "@typescript-eslint/utils/ts-eslint";
 
 import { type defaultOptions, Messages } from "./config";
@@ -6,6 +7,7 @@ import { type defaultOptions, Messages } from "./config";
 const IGNORED_DEFINITIONS = new Set([
     "ImplicitGlobalVariable",
     "ImportBinding",
+    "Type",
 ]);
 
 export const create = (
@@ -41,6 +43,8 @@ export const create = (
         );
     };
 
+    const reportedIdentifiers: TSESTree.Identifier[] = [];
+
     const checkScope = ($scope: Scope.Scope) => {
         for (const variable of $scope.variables) {
             const definition = variable.defs[0];
@@ -49,7 +53,8 @@ export const create = (
             if (
                 !definition ||
                 !identifier ||
-                IGNORED_DEFINITIONS.has(definition.type)
+                IGNORED_DEFINITIONS.has(definition.type) ||
+                reportedIdentifiers.includes(identifier)
             ) {
                 continue;
             }
@@ -59,6 +64,8 @@ export const create = (
             if (!abbreviation) {
                 continue;
             }
+
+            reportedIdentifiers.push(identifier);
 
             context.report({
                 data: {

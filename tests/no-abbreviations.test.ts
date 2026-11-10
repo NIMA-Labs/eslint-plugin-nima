@@ -6,6 +6,11 @@ const ruleTester = new RuleTester();
 ruleTester.run("no-abbreviations", rule, {
     invalid: [
         {
+            code: "class Btn {}",
+            errors: [{ messageId: Messages.NO_ABBREVIATIONS }],
+            name: "Class names are reported once",
+        },
+        {
             code: "const handleChange = (e) => e.target;",
             errors: [
                 {
@@ -73,6 +78,10 @@ ruleTester.run("no-abbreviations", rule, {
         },
     ],
     valid: [
+        {
+            code: "const pick = <T, K extends keyof T>(source: T, key: K) => source[key];",
+            name: "Single-letter type parameters are allowed",
+        },
         "const handleChange = (event) => event.target;",
         "const maxLeverage = 10;",
         "list.filter((value, index) => list.indexOf(value) === index);",

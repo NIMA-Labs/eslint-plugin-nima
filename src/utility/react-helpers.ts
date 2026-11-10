@@ -22,12 +22,8 @@ export const isFunctionNode = ($node: TSESTree.Node) =>
     $node.type === AST_NODE_TYPES.FunctionDeclaration ||
     $node.type === AST_NODE_TYPES.FunctionExpression;
 
-export const getFunctionDeclarator = (node: TSESTree.FunctionLike) => {
-    if (node.type === AST_NODE_TYPES.FunctionDeclaration) {
-        return node;
-    }
-
-    let current: TSESTree.Node = node;
+const getOutermostWrapper = (node: TSESTree.Node) => {
+    let current = node;
 
     while (
         current.parent?.type === AST_NODE_TYPES.CallExpression &&
@@ -36,10 +32,24 @@ export const getFunctionDeclarator = (node: TSESTree.FunctionLike) => {
         current = current.parent;
     }
 
-    return current.parent?.type === AST_NODE_TYPES.VariableDeclarator
-        ? current.parent
+    return current;
+};
+
+export const getFunctionDeclarator = (node: TSESTree.FunctionLike) => {
+    if (node.type === AST_NODE_TYPES.FunctionDeclaration) {
+        return node;
+    }
+
+    const outermostWrapper = getOutermostWrapper(node);
+
+    return outermostWrapper.parent?.type === AST_NODE_TYPES.VariableDeclarator
+        ? outermostWrapper.parent
         : null;
 };
+
+export const isDefaultExported = (node: TSESTree.FunctionLike) =>
+    getOutermostWrapper(node).parent?.type ===
+    AST_NODE_TYPES.ExportDefaultDeclaration;
 
 export const getDeclaredFunctionName = (node: TSESTree.FunctionLike) => {
     const declarator = getFunctionDeclarator(node);
@@ -56,8 +66,6 @@ export const getDeclaredFunctionName = (node: TSESTree.FunctionLike) => {
 export const isWrappedIn = ($node: TSESTree.Node, $wrapperName: string) =>
     $node.parent?.type === AST_NODE_TYPES.CallExpression &&
     getCalleeName($node.parent.callee) === $wrapperName;
-
-export const isComponentName = (name: string) => /^[A-Z]/.test(name);
 
 export const isHookName = (name: string) => /^use[A-Z0-9]/.test(name);
 

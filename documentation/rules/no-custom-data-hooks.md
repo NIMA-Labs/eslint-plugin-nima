@@ -21,7 +21,7 @@ A function named `use*` that calls a data hook — a call whose member chain sta
 ```
 
 - **dataSources** — root identifiers of the data layer. Default `["monaco"]`.
-- **allow.files** / **allow.folders** — glob patterns (file basename / directory) where data hooks are allowed, e.g. hooks backing data tables. Matching works like [`restrict-imports`](./restrict-imports.md).
+- **allow.files** / **allow.folders** — glob patterns where data hooks are allowed, e.g. hooks backing data tables. `files` matches the file name (`use*Query.ts`); `folders` matches the absolute directory, so start folder globs with `**/` (`**/tables/**`). Matching works like [`restrict-imports`](./restrict-imports.md).
 
 Scope the rule to app code with an ESLint `files` block if packages legitimately compose hooks.
 

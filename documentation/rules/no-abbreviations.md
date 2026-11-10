@@ -4,7 +4,7 @@ Disallows abbreviated identifiers. Spell the full word: `event` not `e`, `index`
 
 ## What the rule checks
 
-Every declared binding — variables, destructured names, parameters, function names and catch parameters. Imports are skipped because their names come from the imported module.
+Every declared binding — variables, destructured names, parameters, function and class names, and catch parameters. Imports are skipped because their names come from the imported module, and type names and type parameters are skipped so single-letter generics (`<T, K>`) stay idiomatic.
 
 - A whole identifier that is an abbreviation is reported, including single letters (`e`, `i`, `v`, `k`).
 - Inside camelCase names, each word of two or more letters is checked (`maxLev`, `btnRef`, `formatAmt`). Single letters inside a name are not.

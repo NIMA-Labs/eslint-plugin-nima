@@ -4,20 +4,23 @@ Disallows comments. Code should explain itself through names and structure; if s
 
 ## What the rule checks
 
-Every line and block comment in the file, including JSDoc, `TODO`s, banners and `eslint-disable` directives. Comments whose text matches one of the `allow` patterns are skipped.
+Every line and block comment in the file, including JSDoc, `TODO`s, banners and `eslint-disable` directives.
+
+Always allowed, because tools require them:
+
+- a shebang (`#!/usr/bin/env node`) on the first line,
+- `@ts-expect-error`,
+- triple-slash `/// <reference>` directives.
 
 ## Options
 
 ```json
 {
-    "nima/no-comments": [
-        "error",
-        { "allow": ["^\\s*@ts-expect-error", "^/\\s*<reference"] }
-    ]
+    "nima/no-comments": ["error", { "allow": ["^\\s*keep:"] }]
 }
 ```
 
-- **allow** — regular expressions tested against the comment text (without the `//` or `/* */`). Default: `@ts-expect-error` and triple-slash `/// <reference>` directives, which tools require.
+- **allow** — extra regular expressions tested against the comment text (without the `//` or `/* */`). They are added to the always-allowed tooling comments and never replace them. Default: `[]`.
 
 ## Examples
 
@@ -33,7 +36,7 @@ const add = (left: number, right: number) => left + right;
 ```ts
 // @ts-expect-error the library types are wrong
 const value = library.call();
-// ✓ allowed by default
+// ✓ always allowed
 ```
 
 ## Notes

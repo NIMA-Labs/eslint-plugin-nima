@@ -40,12 +40,17 @@ export const config: {
     type: "suggestion",
 };
 
+export const TOOLING_COMMENTS = [
+    String.raw`^\s*@ts-expect-error`,
+    String.raw`^/\s*<reference`,
+];
+
 export const defaultOptions: [
     {
         allow?: string[];
     },
 ] = [
     {
-        allow: [String.raw`^\s*@ts-expect-error`, String.raw`^/\s*<reference`],
+        allow: [],
     },
 ];

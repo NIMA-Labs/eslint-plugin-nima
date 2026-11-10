@@ -1,17 +1,23 @@
 import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 
-import { type defaultOptions, Messages } from "./config";
+import { type defaultOptions, Messages, TOOLING_COMMENTS } from "./config";
 
 export const create = (
     context: RuleContext<Messages, typeof defaultOptions>,
     [options]: Readonly<typeof defaultOptions>
 ) => {
-    const allow = (options.allow ?? []).map((pattern) => new RegExp(pattern));
+    const allow = [...TOOLING_COMMENTS, ...(options.allow ?? [])].map(
+        (pattern) => new RegExp(pattern)
+    );
+    const hasShebang = context.sourceCode.text.startsWith("#!");
 
     return {
         Program: () => {
             for (const comment of context.sourceCode.getAllComments()) {
-                if (allow.some((pattern) => pattern.test(comment.value))) {
+                if (
+                    (hasShebang && comment.range[0] === 0) ||
+                    allow.some((pattern) => pattern.test(comment.value))
+                ) {
                     continue;
                 }
 
