@@ -1,15 +1,3 @@
-/* Test file for restrict-function-usage rule
-    Refined and stripped of redundant tests
-    Comments indicate the test number and purpose to help identify tests
-
-    Created by: Nima Labs
-    Last modified: 2025-10-01
-
-    Tests present: 13
-    Invalid tests: 6
-    Valid tests: 7
-*/
-
 import { Messages, rule } from "@rules/restrict-function-usage";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 
@@ -17,10 +5,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.run("manage-functions", rule, {
     invalid: [
-        // === BASIC RESTRICTION TESTS ===
-
-        // 1. Disallow a function in a specific folder
         {
+            name: "Disallow a function in a specific folder",
             code: "z.string().optional()",
             errors: [
                 {
@@ -38,8 +24,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 2. Disallow a function in a file that matches a file glob
         {
+            name: "Disallow a function in a file that matches a file glob",
             code: "restrictedFunc()",
             errors: [
                 {
@@ -58,8 +44,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 3. Disallow a method on an object, including chained calls
         {
+            name: "Disallow a method on an object, including chained calls",
             code: "window.localStorage.setItem('key', 'value')",
             errors: [
                 {
@@ -77,8 +63,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 4. Multiple functions in a disable list
         {
+            name: "Multiple functions in a disable list",
             code: "setTimeout(callback, 1000)",
             errors: [
                 {
@@ -95,8 +81,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 5. Test multiple options where the first rule matches
         {
+            name: "Test multiple options where the first rule matches",
             code: "dangerousFunction()",
             errors: [
                 {
@@ -120,10 +106,8 @@ ruleTester.run("manage-functions", rule, {
     ],
 
     valid: [
-        // === VALID USAGE TESTS ===
-
-        // 6. Function in a file not matching the folder restriction
         {
+            name: "Function in a file not matching the folder restriction",
             code: "z.string().optional()",
             filename: "/src/utils/index.ts",
             options: [
@@ -136,8 +120,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 7. Folder matches but the file pattern does not
         {
+            name: "Folder matches but the file pattern does not",
             code: "restrictedFunc()",
             filename: "/src/components/atoms/Button.tsx",
             options: [
@@ -151,8 +135,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 8. A function that is in an allow list and in the correct location
         {
+            name: "A function that is in an allow list and in the correct location",
             code: "sharedFunction()",
             filename: "/src/shared/utils.ts",
             options: [
@@ -169,8 +153,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 9. A globally allowed function (no files/folders specified)
         {
+            name: "A globally allowed function (no files/folders specified)",
             code: "globallyAllowed()",
             filename: "/src/anywhere/file.ts",
             options: [
@@ -182,8 +166,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 10. An allowed function with an object call
         {
+            name: "An allowed function with an object call",
             code: "obj.allowedMethod()",
             filename: "/src/services/api.ts",
             options: [
@@ -196,8 +180,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 11. A function not in any restriction list
         {
+            name: "A function not in any restriction list",
             code: "unrestricted()",
             filename: "/src/test/file.ts",
             options: [
@@ -210,8 +194,8 @@ ruleTester.run("manage-functions", rule, {
             ],
         },
 
-        // 12. No options are specified
         {
+            name: "No options are specified",
             code: "anyFunction()",
             filename: "/src/anywhere/file.ts",
             options: [[]],

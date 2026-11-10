@@ -112,8 +112,8 @@ export const getFunctionNameWithContext = (node: TSESTree.FunctionLike) => {
     return { context, name };
 };
 
-export const isComponentFunction = (fnName: string) => {
-    return !!/^[A-Z]/.test(fnName);
+export const isComponentFunction = (functionName: string) => {
+    return !!/^[A-Z]/.test(functionName);
 };
 
 export const hasReactTypeAnnotation = (

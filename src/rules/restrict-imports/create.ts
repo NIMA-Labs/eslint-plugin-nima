@@ -3,11 +3,11 @@ import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 import { isFileMatched } from "@utility/file-helpers";
 import { minimatch } from "minimatch";
 
-import { Messages, type Options } from "./config";
+import { type defaultOptions, Messages } from "./config";
 
 export const create = (
-    context: RuleContext<Messages, Options>,
-    [options = []]: readonly Options[number][]
+    context: RuleContext<Messages, typeof defaultOptions>,
+    [options = []]: Readonly<typeof defaultOptions>
 ) => {
     const isImportDisabled = ({
         filename,

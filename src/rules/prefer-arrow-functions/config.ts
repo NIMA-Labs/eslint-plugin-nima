@@ -8,25 +8,15 @@ export const enum Messages {
     PREFER_ARROW_METHOD = "PREFER_ARROW_METHOD",
 }
 
-export type Options = [
-    Partial<{
-        allowAsync: boolean;
-        allowConstructors: boolean;
-        allowFunctionDeclarations: boolean;
-        allowFunctionExpressions: boolean;
-        allowGenerators: boolean;
-        allowMethodDefinitions: boolean;
-    }>,
-];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description:
             "Prefer arrow functions over function declarations and expressions",
@@ -81,7 +71,16 @@ export const config: {
     type: "suggestion",
 };
 
-export const defaultOptions: Options = [
+export const defaultOptions: [
+    Partial<{
+        allowAsync: boolean;
+        allowConstructors: boolean;
+        allowFunctionDeclarations: boolean;
+        allowFunctionExpressions: boolean;
+        allowGenerators: boolean;
+        allowMethodDefinitions: boolean;
+    }>,
+] = [
     {
         allowAsync: true,
         allowConstructors: true,

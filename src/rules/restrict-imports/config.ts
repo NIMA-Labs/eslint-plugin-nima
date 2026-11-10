@@ -6,24 +6,15 @@ export const enum Messages {
     IMPORT_DISALLOWED = "IMPORT_DISALLOWED",
 }
 
-export type Options = [
-    Partial<{
-        allowImports: string[];
-        disableImports: string[];
-        files: string[];
-        folders: string[];
-        from: string[];
-    }>[],
-];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description:
             "Disallow use of any imports in any files or folders unless explicitly allowed.",
@@ -86,4 +77,12 @@ export const config: {
     type: "problem",
 };
 
-export const defaultOptions: Options = [[]];
+export const defaultOptions: [
+    Partial<{
+        allowImports: string[];
+        disableImports: string[];
+        files: string[];
+        folders: string[];
+        from: string[];
+    }>[],
+] = [[]];

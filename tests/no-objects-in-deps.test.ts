@@ -1,14 +1,3 @@
-/*  Test file for no-objects-in-deps rule
-    Comments indicate the test number and purpose to help identify tests
-
-    Created by: Nima Labs
-    Last modified: 2025-10-01
-
-    Tests present: 16
-    Invalid tests: 9
-    Valid tests: 7
-*/
-
 import { Messages, rule } from "@rules/no-objects-in-deps";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 
@@ -16,8 +5,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.run("no-objects-in-deps", rule, {
     invalid: [
-        // Object literal in dependency array
         {
+            name: "Object literal in dependency array",
             code: "useEffect(() => {}, [{ NIMA: 'labs' }])",
             errors: [
                 {
@@ -27,8 +16,8 @@ ruleTester.run("no-objects-in-deps", rule, {
             output: "useEffect(() => {}, [JSON.stringify({ NIMA: 'labs' })])",
         },
 
-        // New expression in dependency array
         {
+            name: "New expression in dependency array",
             code: "useEffect(() => {}, [new Date()])",
             errors: [
                 {
@@ -38,8 +27,8 @@ ruleTester.run("no-objects-in-deps", rule, {
             output: "useEffect(() => {}, [JSON.stringify(new Date())])",
         },
 
-        // useCallback with object
         {
+            name: "useCallback with object",
             code: "useCallback(() => {}, [{ NIMA: 'Enterprises' }])",
             errors: [
                 {
@@ -49,8 +38,8 @@ ruleTester.run("no-objects-in-deps", rule, {
             output: "useCallback(() => {}, [JSON.stringify({ NIMA: 'Enterprises' })])",
         },
 
-        // Multiple invalid dependencies
         {
+            name: "Multiple invalid dependencies",
             code: "useEffect(() => {}, [{ foo: 'bar' }, new Set()])",
             errors: [
                 {
@@ -63,8 +52,8 @@ ruleTester.run("no-objects-in-deps", rule, {
             output: "useEffect(() => {}, [JSON.stringify({ foo: 'bar' }), JSON.stringify(new Set())])",
         },
 
-        // React namespace with object
         {
+            name: "React namespace with object",
             code: "React.useEffect(() => {}, [{ test: true }])",
             errors: [
                 {
@@ -74,8 +63,8 @@ ruleTester.run("no-objects-in-deps", rule, {
             output: "React.useEffect(() => {}, [JSON.stringify({ test: true })])",
         },
 
-        // Bracket notation with object
         {
+            name: "Bracket notation with object",
             code: "React['useCallback'](() => {}, [{ key: 'value' }])",
             errors: [
                 {
@@ -87,34 +76,48 @@ ruleTester.run("no-objects-in-deps", rule, {
     ],
 
     valid: [
-        // Empty dependency array
-        "useEffect(() => {}, [])",
+        { code: "useEffect(() => {}, [])", name: "Empty dependency array" },
 
-        // Primitive values in dependencies
-        "useEffect(() => {}, [variable, 123, true, 'string'])",
+        {
+            code: "useEffect(() => {}, [variable, 123, true, 'string'])",
+            name: "Primitive values in dependencies",
+        },
 
-        // React namespace with variables
-        "React.useEffect(() => {}, [validVar])",
+        {
+            code: "React.useEffect(() => {}, [validVar])",
+            name: "React namespace with variables",
+        },
 
-        // Property access (allowed)
-        "useEffect(() => {}, [object.property])",
+        {
+            code: "useEffect(() => {}, [object.property])",
+            name: "Property access (allowed)",
+        },
 
-        // Function calls (allowed)
-        "useEffect(() => {}, [getObject()])",
+        {
+            code: "useEffect(() => {}, [getObject()])",
+            name: "Function calls (allowed)",
+        },
 
-        // Not a hook - objects allowed
-        "someFunction([{ object: 'allowed' }])",
+        {
+            code: "someFunction([{ object: 'allowed' }])",
+            name: "Not a hook - objects allowed",
+        },
 
-        // Hook without dependency array
-        "useEffect(() => {})",
+        { code: "useEffect(() => {})", name: "Hook without dependency array" },
 
-        // Arrays are allowed (they're not problematic in deps)
-        "useEffect(() => {}, [[1, 2, 3]])",
+        {
+            code: "useEffect(() => {}, [[1, 2, 3]])",
+            name: "Arrays are allowed (they're not problematic in deps)",
+        },
 
-        // Array variables are allowed
-        "useMemo(() => {}, [['a', 'b']])",
+        {
+            code: "useMemo(() => {}, [['a', 'b']])",
+            name: "Array variables are allowed",
+        },
 
-        // Functions in deps are allowed
-        "useEffect(() => {}, [() => {}])",
+        {
+            code: "useEffect(() => {}, [() => {}])",
+            name: "Functions in deps are allowed",
+        },
     ],
 });

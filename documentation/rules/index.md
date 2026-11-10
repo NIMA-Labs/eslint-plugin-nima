@@ -14,6 +14,9 @@ Each rule has three levels of explanation:
 
 ### Conventions
 
+- **no-abbreviations**  
+  Disallows abbreviated identifiers like `e`, `idx` or `maxLev`.
+
 - **boolean-naming-convention**  
   Enforces prefixes like `is`, `has`, `will` for boolean values.
 
@@ -21,6 +24,18 @@ Each rule has three levels of explanation:
   Improves readability by enforcing objects as function parameters.
 
 ### Restrictions
+
+- **no-comments**  
+  Disallows comments; code explains itself through names and structure.
+
+- **no-custom-data-hooks**  
+  Disallows custom hooks that wrap data hooks.
+
+- **no-inline-helpers**  
+  Disallows one-off wrapper functions and nested components inside components and hooks.
+
+- **no-named-types**  
+  Disallows named `type` aliases and interfaces.
 
 - **restrict-console-methods**  
   Disallows the use of any `console` methods.
@@ -38,6 +53,9 @@ Each rule has three levels of explanation:
   Disallows functions with the `handler` suffix.
 
 ### Preferences
+
+- **prefer-current-data**  
+  Requires `currentData` instead of `data` from RTK Query hooks.
 
 - **prefer-arrow-functions**  
   Enforces the use of arrow functions instead of other function forms.
@@ -361,10 +379,16 @@ All rules have their own dedicated page with detailed configuration, usage, and 
 ### Rule documentation pages
 
 - [boolean-naming-convention](./boolean-naming-convention.md)
+- [no-abbreviations](./no-abbreviations.md)
+- [no-comments](./no-comments.md)
+- [no-custom-data-hooks](./no-custom-data-hooks.md)
 - [no-handler-suffix](./no-handler-suffix.md)
+- [no-inline-helpers](./no-inline-helpers.md)
+- [no-named-types](./no-named-types.md)
 - [no-objects-in-deps](./no-objects-in-deps.md)
 - [params-naming-convention](./params-naming-convention.md)
 - [prefer-arrow-functions](./prefer-arrow-functions.md)
+- [prefer-current-data](./prefer-current-data.md)
 - [prefer-void-for-optional-param](./prefer-void-for-optional-param.md)
 - [prefer-export-under-component](./prefer-export-under-component.md)
 - [prefer-react-fc](./prefer-react-fc.md)

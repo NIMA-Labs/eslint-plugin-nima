@@ -1,15 +1,3 @@
-/* Test file for restrict-console-methods rule
-    Refined and stripped of redundant tests
-    Comments indicate the test number and purpose to help identify tests
-
-    Created by: Nima Labs
-    Last modified: 2025-10-01
-
-    Tests present: 14
-    Invalid tests: 6
-    Valid tests: 8
-*/
-
 import { Messages, rule } from "@rules/restrict-console-methods";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 
@@ -127,8 +115,8 @@ ruleTester.run("restrict-console-methods", rule, {
             options: [{ allow: ["log"] }],
         },
 
-        // 12. Multiple methods allowed
         {
+            name: "Multiple methods allowed",
             code: `
         console.log('log');
         console.warn('warn');

@@ -3,9 +3,11 @@ import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 import ts from "typescript";
 
-import { Messages, type Options } from "./config";
+import { type defaultOptions, Messages } from "./config";
 
-export const create = (context: RuleContext<Messages, Options>) => {
+export const create = (
+    context: RuleContext<Messages, typeof defaultOptions>
+) => {
     const services = context.sourceCode.parserServices;
     const checker = services?.program?.getTypeChecker();
 
@@ -97,8 +99,8 @@ export const create = (context: RuleContext<Messages, Options>) => {
                 if (t.isIntersection()) {
                     return false;
                 }
-                const typeStr = checker.typeToString(t);
-                if (typeStr.startsWith("`") && typeStr.endsWith("`")) {
+                const typeText = checker.typeToString(t);
+                if (typeText.startsWith("`") && typeText.endsWith("`")) {
                     return true;
                 }
 

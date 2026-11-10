@@ -2,18 +2,18 @@ import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 import { isFileMatched } from "@utility/file-helpers";
 
-import { Messages, type Options } from "./config";
+import { type defaultOptions, Messages } from "./config";
 
 export const create = (
-    context: RuleContext<Messages, Options>,
-    [options = []]: readonly Options[number][]
+    context: RuleContext<Messages, typeof defaultOptions>,
+    [options = []]: Readonly<typeof defaultOptions>
 ) => {
     const isFunctionDisabled = ({
         filename,
-        fnName,
+        functionName,
     }: {
         filename: string;
-        fnName: string;
+        functionName: string;
     }) => {
         return options.some((option) => {
             const {
@@ -35,7 +35,9 @@ export const create = (
 
             if (allowFunctions.length > 0) {
                 const isFunctionInAllowList = allowFunctions.some(
-                    (fn) => fn.toLowerCase() === fnName.toLowerCase()
+                    (listedFunction) =>
+                        listedFunction.toLowerCase() ===
+                        functionName.toLowerCase()
                 );
 
                 if (isFunctionInAllowList) {
@@ -52,7 +54,9 @@ export const create = (
 
             if (
                 disableFunctions.some(
-                    (fn) => fn.toLowerCase() === fnName.toLowerCase()
+                    (listedFunction) =>
+                        listedFunction.toLowerCase() ===
+                        functionName.toLowerCase()
                 )
             ) {
                 return true;
@@ -71,13 +75,13 @@ export const create = (
                 if (
                     isFunctionDisabled({
                         filename,
-                        fnName: callee.name.toLowerCase(),
+                        functionName: callee.name.toLowerCase(),
                     })
                 ) {
                     context.report({
                         data: {
                             filename,
-                            fnName: callee.name,
+                            functionName: callee.name,
                         },
                         messageId: Messages.FUNCTION_DISALLOWED,
                         node: callee,
@@ -88,13 +92,13 @@ export const create = (
                 callee.property.type === AST_NODE_TYPES.Identifier &&
                 isFunctionDisabled({
                     filename,
-                    fnName: callee.property.name.toLowerCase(),
+                    functionName: callee.property.name.toLowerCase(),
                 })
             ) {
                 context.report({
                     data: {
                         filename,
-                        fnName: callee.property.name,
+                        functionName: callee.property.name,
                     },
                     messageId: Messages.FUNCTION_DISALLOWED,
                     node: callee.property,

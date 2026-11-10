@@ -1,14 +1,3 @@
-/*  Test file for prefer-arrow-functions rule
-    Comments indicate the test number and purpose to help identify tests
-
-    Created by: Nima Labs
-    Last modified: 2025-10-01
-
-    Tests present: 18
-    Invalid tests: 10
-    Valid tests: 8
-*/
-
 import { Messages, rule } from "@rules/prefer-arrow-functions";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 
@@ -16,8 +5,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.run("prefer-arrow-functions", rule, {
     invalid: [
-        // Function declaration
         {
+            name: "Function declaration",
             code: "function NIMALabs() {}",
             errors: [
                 {
@@ -27,8 +16,8 @@ ruleTester.run("prefer-arrow-functions", rule, {
             output: "const NIMALabs = () => {}",
         },
 
-        // Function declaration with parameters and types
         {
+            name: "Function declaration with parameters and types",
             code: "function sum(a: number, b: number): number { return a + b; }",
             errors: [
                 {
@@ -38,8 +27,8 @@ ruleTester.run("prefer-arrow-functions", rule, {
             output: "const sum = (a: number, b: number): number => { return a + b; }",
         },
 
-        // Async function declaration
         {
+            name: "Async function declaration",
             code: "async function asyncFunc() { await Promise.resolve(); }",
             errors: [
                 {
@@ -50,8 +39,8 @@ ruleTester.run("prefer-arrow-functions", rule, {
             output: "const asyncFunc = async () => { await Promise.resolve(); }",
         },
 
-        // Exported function declaration
         {
+            name: "Exported function declaration",
             code: "export function exportedFunc(a: number) { return a * 2; }",
             errors: [
                 {
@@ -61,8 +50,8 @@ ruleTester.run("prefer-arrow-functions", rule, {
             output: "export const exportedFunc = (a: number) => { return a * 2; }",
         },
 
-        // Export default function
         {
+            name: "Export default function",
             code: "export default function defaultExported() { return 'foo'; }",
             errors: [
                 {
@@ -72,8 +61,8 @@ ruleTester.run("prefer-arrow-functions", rule, {
             output: "const defaultExported = () => { return 'foo'; };\nexport default defaultExported",
         },
 
-        // Function expression
         {
+            name: "Function expression",
             code: "const myFunc = function () {}",
             errors: [
                 {
@@ -83,8 +72,8 @@ ruleTester.run("prefer-arrow-functions", rule, {
             output: "const myFunc = () => {}",
         },
 
-        // Function expression with parameters
         {
+            name: "Function expression with parameters",
             code: "const subtract = function(a: number, b: number): number { return a - b; };",
             errors: [
                 {
@@ -94,8 +83,8 @@ ruleTester.run("prefer-arrow-functions", rule, {
             output: "const subtract = (a: number, b: number): number => { return a - b; };",
         },
 
-        // Object property function
         {
+            name: "Object property function",
             code: "const obj = { prop: function() {} };",
             errors: [
                 {
@@ -105,8 +94,8 @@ ruleTester.run("prefer-arrow-functions", rule, {
             output: "const obj = { prop: () => {} };",
         },
 
-        // Object method definition
         {
+            name: "Object method definition",
             code: "const myObject = { myMethod(a: number) { return a; } };",
             errors: [
                 {
@@ -116,8 +105,8 @@ ruleTester.run("prefer-arrow-functions", rule, {
             output: "const myObject = { myMethod: (a: number) => { return a; } };",
         },
 
-        // Class method definition
         {
+            name: "Class method definition",
             code: "class MyClass { myMethod() { return 1; } }",
             errors: [
                 {
@@ -132,37 +121,36 @@ ruleTester.run("prefer-arrow-functions", rule, {
     ],
 
     valid: [
-        // Arrow functions (valid)
-        "const NIMALabs = () => {}",
+        { code: "const NIMALabs = () => {}", name: "Arrow functions (valid)" },
         "const withParams = (a, b) => a + b;",
         "const myAsyncFunc = async () => {}",
 
-        // Functions with allowFunctionDeclarations option
         {
+            name: "Functions with allowFunctionDeclarations option",
             code: "function allowedFunc() {}",
             options: [{ allowFunctionDeclarations: true }],
         },
 
-        // Generator functions with allowGenerators option
         {
+            name: "Generator functions with allowGenerators option",
             code: "function* generatorFunc() { yield 1; }",
             options: [{ allowGenerators: true }],
         },
 
-        // Class methods with allowMethodDefinitions option
         {
+            name: "Class methods with allowMethodDefinitions option",
             code: "class MyClass { myMethod() {} }",
             options: [{ allowMethodDefinitions: true }],
         },
 
-        // Constructor with allowConstructors option
         {
+            name: "Constructor with allowConstructors option",
             code: "class MyClass { constructor() {} }",
             options: [{ allowConstructors: true }],
         },
 
-        // Function expression with allowFunctionExpressions option
         {
+            name: "Function expression with allowFunctionExpressions option",
             code: "const func = function() {};",
             options: [{ allowFunctionExpressions: true }],
         },

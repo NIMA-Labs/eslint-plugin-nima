@@ -1,9 +1,11 @@
 import { TSESTree } from "@typescript-eslint/utils";
 import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 
-import { Messages, type Options } from "./config";
+import { type defaultOptions, Messages } from "./config";
 
-export const create = (context: RuleContext<Messages, Options>) => {
+export const create = (
+    context: RuleContext<Messages, typeof defaultOptions>
+) => {
     return {
         CallExpression: (node: TSESTree.CallExpression) => {
             if (node.optional) {

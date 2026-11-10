@@ -1,16 +1,19 @@
-import type {
-    FlatConfig,
-    RuleModule,
-} from "@typescript-eslint/utils/ts-eslint";
+import type { FlatConfig } from "@typescript-eslint/utils/ts-eslint";
 import type { ESLint, Linter } from "eslint";
 
 import {
     BooleanNamingConvention,
+    NoAbbreviations,
+    NoComments,
+    NoCustomDataHooks,
     NoHandlerSuffix,
+    NoInlineHelpers,
+    NoNamedTypes,
     NoObjectsInDeps,
     NoOptionalCallExpression,
     ParamsNamingConvention,
     PreferArrowFunctions,
+    PreferCurrentData,
     PreferExportUnderComponent,
     PreferReactFc,
     PreferReactWithHooks,
@@ -22,11 +25,17 @@ import {
 
 const rules = {
     [BooleanNamingConvention.name]: BooleanNamingConvention.rule,
+    [NoAbbreviations.name]: NoAbbreviations.rule,
+    [NoComments.name]: NoComments.rule,
+    [NoCustomDataHooks.name]: NoCustomDataHooks.rule,
     [NoHandlerSuffix.name]: NoHandlerSuffix.rule,
+    [NoInlineHelpers.name]: NoInlineHelpers.rule,
+    [NoNamedTypes.name]: NoNamedTypes.rule,
     [NoObjectsInDeps.name]: NoObjectsInDeps.rule,
     [NoOptionalCallExpression.name]: NoOptionalCallExpression.rule,
     [ParamsNamingConvention.name]: ParamsNamingConvention.rule,
     [PreferArrowFunctions.name]: PreferArrowFunctions.rule,
+    [PreferCurrentData.name]: PreferCurrentData.rule,
     [PreferExportUnderComponent.name]: PreferExportUnderComponent.rule,
     [PreferReactFc.name]: PreferReactFc.rule,
     [PreferReactWithHooks.name]: PreferReactWithHooks.rule,
@@ -36,18 +45,11 @@ const rules = {
     [RestrictImports.name]: RestrictImports.rule,
 };
 
-interface Plugin extends Omit<ESLint.Plugin, "rules"> {
-    configs: {
+const plugin = {
+    configs: {} as {
         "flat/recommended": Linter.Config;
         recommended: ESLint.ConfigData;
-    };
-    rules: Record<RuleKey, RuleModule<any, any, any>>;
-}
-
-type RuleKey = keyof typeof rules;
-
-const plugin = {
-    configs: {} as Plugin["configs"],
+    },
 
     meta: {
         name: "eslint-plugin-nima",
@@ -57,7 +59,7 @@ const plugin = {
 };
 
 const recommended: {
-    [K in RuleKey as `nima/${K}`]?: FlatConfig.RuleLevel;
+    [RuleName in keyof typeof rules as `nima/${RuleName}`]?: FlatConfig.RuleLevel;
 } = {
     "nima/no-handler-suffix": "error",
     "nima/prefer-export-under-component": "error",

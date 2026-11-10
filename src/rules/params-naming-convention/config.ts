@@ -6,23 +6,15 @@ export const enum Messages {
     USE_OBJECT_PARAMETERS = "USE_OBJECT_PARAMETERS",
 }
 
-export type Options = [
-    Partial<{
-        allowedParameters: number;
-        ignore: string[];
-        ignoreFunctions: string[];
-        ignorePrefixes: string[];
-    }>,
-];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description:
             "Enforce using a single object parameter for all functions",
@@ -63,7 +55,14 @@ export const config: {
     type: "problem",
 };
 
-export const defaultOptions: Options = [
+export const defaultOptions: [
+    Partial<{
+        allowedParameters: number;
+        ignore: string[];
+        ignoreFunctions: string[];
+        ignorePrefixes: string[];
+    }>,
+] = [
     {
         allowedParameters: 1,
         ignore: ["e"],

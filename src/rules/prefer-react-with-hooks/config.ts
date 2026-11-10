@@ -7,16 +7,15 @@ export const enum Messages {
     PREFER_REACT_PREFIX = "PREFER_REACT_PREFIX",
 }
 
-export type Options = [];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description: "Enforce React.use* over named use* imports",
         recommended: false,
@@ -32,4 +31,4 @@ export const config: {
     type: "problem",
 };
 
-export const defaultOptions: Options = [];
+export const defaultOptions: [] = [];

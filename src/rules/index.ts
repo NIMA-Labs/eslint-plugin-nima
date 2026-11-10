@@ -1,9 +1,15 @@
 export * as BooleanNamingConvention from "./boolean-naming-convention";
+export * as NoAbbreviations from "./no-abbreviations";
+export * as NoComments from "./no-comments";
+export * as NoCustomDataHooks from "./no-custom-data-hooks";
 export * as NoHandlerSuffix from "./no-handler-suffix";
+export * as NoInlineHelpers from "./no-inline-helpers";
+export * as NoNamedTypes from "./no-named-types";
 export * as NoObjectsInDeps from "./no-objects-in-deps";
 export * as NoOptionalCallExpression from "./no-optional-call-expression";
 export * as ParamsNamingConvention from "./params-naming-convention";
 export * as PreferArrowFunctions from "./prefer-arrow-functions";
+export * as PreferCurrentData from "./prefer-current-data";
 export * as PreferExportUnderComponent from "./prefer-export-under-component";
 export * as PreferReactFc from "./prefer-react-fc";
 export * as PreferReactWithHooks from "./prefer-react-with-hooks";
