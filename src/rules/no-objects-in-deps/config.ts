@@ -6,16 +6,15 @@ export const enum Messages {
     NO_OBJECTS_IN_DEPENDENCIES = "NO_OBJECTS_IN_DEPENDENCIES",
 }
 
-export type Options = [];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description: "Suggests to not use objects in dependency arrays",
         recommended: false,
@@ -30,4 +29,4 @@ export const config: {
     type: "suggestion",
 };
 
-export const defaultOptions: Options = [];
+export const defaultOptions: [] = [];

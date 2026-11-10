@@ -6,24 +6,26 @@ import {
     isReactReturn,
 } from "@utility/function-helpers";
 
-import { Messages, type Options } from "./config";
+import { type defaultOptions, Messages } from "./config";
 
-export const create = (context: RuleContext<Messages, Options>) => {
+export const create = (
+    context: RuleContext<Messages, typeof defaultOptions>
+) => {
     return {
         ExportDefaultDeclaration: (node: TSESTree.ExportDefaultDeclaration) => {
             if (node.declaration.type !== AST_NODE_TYPES.FunctionDeclaration) {
                 return;
             }
 
-            const fnName = node.declaration.id?.name;
+            const functionName = node.declaration.id?.name;
             if (
-                fnName &&
-                isComponentFunction(fnName) &&
+                functionName &&
+                isComponentFunction(functionName) &&
                 isReactReturn(node.declaration)
             ) {
                 context.report({
                     data: {
-                        fnName,
+                        functionName,
                     },
                     fix: (fixer) => {
                         const sourceCode = context.sourceCode;
@@ -37,7 +39,7 @@ export const create = (context: RuleContext<Messages, Options>) => {
                             fixer.replaceText(node, newText),
                             fixer.insertTextAfter(
                                 node,
-                                `\n\nexport { ${fnName} };`
+                                `\n\nexport { ${functionName} };`
                             ),
                         ];
                     },
@@ -58,23 +60,24 @@ export const create = (context: RuleContext<Messages, Options>) => {
                     return;
                 }
 
-                const fnNode = declarator.init;
+                const functionNode = declarator.init;
                 if (
-                    fnNode.type !== AST_NODE_TYPES.ArrowFunctionExpression &&
-                    fnNode.type !== AST_NODE_TYPES.FunctionExpression
+                    functionNode.type !==
+                        AST_NODE_TYPES.ArrowFunctionExpression &&
+                    functionNode.type !== AST_NODE_TYPES.FunctionExpression
                 ) {
                     return;
                 }
 
-                const fnName = getFunctionName(fnNode);
+                const functionName = getFunctionName(functionNode);
                 if (
-                    fnName &&
-                    isComponentFunction(fnName) &&
-                    isReactReturn(fnNode)
+                    functionName &&
+                    isComponentFunction(functionName) &&
+                    isReactReturn(functionNode)
                 ) {
                     context.report({
                         data: {
-                            fnName,
+                            functionName,
                         },
                         fix: (fixer) => {
                             const sourceCode = context.sourceCode;
@@ -85,7 +88,7 @@ export const create = (context: RuleContext<Messages, Options>) => {
                                 fixer.replaceText(node, newText),
                                 fixer.insertTextAfter(
                                     node,
-                                    `\n\nexport { ${fnName} };`
+                                    `\n\nexport { ${functionName} };`
                                 ),
                             ];
                         },
@@ -101,11 +104,15 @@ export const create = (context: RuleContext<Messages, Options>) => {
                 return;
             }
 
-            const fnName = getFunctionName(node);
-            if (fnName && isComponentFunction(fnName) && isReactReturn(node)) {
+            const functionName = getFunctionName(node);
+            if (
+                functionName &&
+                isComponentFunction(functionName) &&
+                isReactReturn(node)
+            ) {
                 context.report({
                     data: {
-                        fnName,
+                        functionName,
                     },
                     fix: (fixer) => {
                         const sourceCode = context.sourceCode;
@@ -116,7 +123,7 @@ export const create = (context: RuleContext<Messages, Options>) => {
                             fixer.replaceText(node.parent, newText),
                             fixer.insertTextAfter(
                                 node.parent,
-                                `\n\nexport { ${fnName} };`
+                                `\n\nexport { ${functionName} };`
                             ),
                         ];
                     },

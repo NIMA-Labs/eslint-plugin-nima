@@ -6,16 +6,15 @@ export const enum Messages {
     BAD_CALL_EXPRESSION = "BAD_CALL_EXPRESSION",
 }
 
-export type Options = [];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description:
             "Restricts the use of optional chaining in call expressions.",
@@ -29,4 +28,4 @@ export const config: {
     schema: [],
     type: "suggestion",
 };
-export const defaultOptions: Options = [];
+export const defaultOptions: [] = [];

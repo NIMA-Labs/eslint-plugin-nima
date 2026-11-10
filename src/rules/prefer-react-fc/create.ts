@@ -5,13 +5,15 @@ import {
     isComponentFunction,
 } from "@utility/function-helpers";
 
-import { Messages, type Options } from "./config";
+import { type defaultOptions, Messages } from "./config";
 
-export const create = (context: RuleContext<Messages, Options>) => {
+export const create = (
+    context: RuleContext<Messages, typeof defaultOptions>
+) => {
     const isReactComponent = (node: TSESTree.FunctionLike) => {
-        const fnName = getFunctionName(node);
+        const functionName = getFunctionName(node);
 
-        if (!fnName || !isComponentFunction(fnName)) {
+        if (!functionName || !isComponentFunction(functionName)) {
             return;
         }
 

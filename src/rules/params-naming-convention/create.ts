@@ -2,11 +2,11 @@ import { AST_NODE_TYPES, type TSESTree } from "@typescript-eslint/utils";
 import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 import { getFunctionName } from "@utility/function-helpers";
 
-import { Messages, type Options } from "./config";
+import { type defaultOptions, Messages } from "./config";
 
 export const create = (
-    context: RuleContext<Messages, Options>,
-    [options]: readonly Options[number][]
+    context: RuleContext<Messages, typeof defaultOptions>,
+    [options]: Readonly<typeof defaultOptions>
 ) => {
     const {
         allowedParameters = 1,
@@ -17,13 +17,13 @@ export const create = (
 
     const checkParams = (node: TSESTree.FunctionLike) => {
         const parameters = node.params;
-        const fnName = getFunctionName(node);
+        const functionName = getFunctionName(node);
 
         if (parameters.length <= allowedParameters) {
             return;
         }
 
-        if (fnName && ignoreFunctions.includes(fnName)) {
+        if (functionName && ignoreFunctions.includes(functionName)) {
             return;
         }
 

@@ -110,10 +110,16 @@ Before diving deep into what each rule does, I recommend reading the [Rule Overv
 The plugin currently provides these rules:
 
 - [boolean-naming-convention](documentation/rules/boolean-naming-convention.md)
+- [no-abbreviations](documentation/rules/no-abbreviations.md)
+- [no-comments](documentation/rules/no-comments.md)
+- [no-custom-data-hooks](documentation/rules/no-custom-data-hooks.md)
 - [no-handler-suffix](documentation/rules/no-handler-suffix.md)
+- [no-inline-helpers](documentation/rules/no-inline-helpers.md)
+- [no-named-types](documentation/rules/no-named-types.md)
 - [no-objects-in-deps](documentation/rules/no-objects-in-deps.md)
 - [params-naming-convention](documentation/rules/params-naming-convention.md)
 - [prefer-arrow-functions](documentation/rules/prefer-arrow-functions.md)
+- [prefer-current-data](documentation/rules/prefer-current-data.md)
 - [prefer-void-for-optional-param](documentation/rules/prefer-void-for-optional-param.md)
 - [prefer-export-under-component](documentation/rules/prefer-export-under-component.md)
 - [prefer-react-fc](documentation/rules/prefer-react-fc.md)

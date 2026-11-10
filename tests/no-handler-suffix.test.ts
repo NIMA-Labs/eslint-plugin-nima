@@ -1,14 +1,3 @@
-/*  Test file for no-handler-suffix rule
-    Comments indicate the test number and purpose to help identify tests
-    
-    Created by: Nima Labs
-    Last modified: 2025-10-01
-
-    Tests present: 16
-    Invalid tests: 8
-    Valid tests: 8
-*/
-
 import { Messages, rule } from "@rules/no-handler-suffix";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 
@@ -16,8 +5,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.run("no-handler-suffix", rule, {
     invalid: [
-        // Arrow function with 'Handler' suffix
         {
+            name: "Arrow function with 'Handler' suffix",
             code: "const clickHandler = () => {}",
             errors: [
                 {
@@ -27,8 +16,8 @@ ruleTester.run("no-handler-suffix", rule, {
             output: "const handleClick = () => {}",
         },
 
-        // Function declaration with 'Handler' suffix
         {
+            name: "Function declaration with 'Handler' suffix",
             code: "function submitHandler() {}",
             errors: [
                 {
@@ -38,8 +27,8 @@ ruleTester.run("no-handler-suffix", rule, {
             output: "function handleSubmit() {}",
         },
 
-        // Function expression with 'Handler' suffix
         {
+            name: "Function expression with 'Handler' suffix",
             code: "const errorHandler = function() {}",
             errors: [
                 {
@@ -49,8 +38,8 @@ ruleTester.run("no-handler-suffix", rule, {
             output: "const handleError = function() {}",
         },
 
-        // Generic 'handler' name
         {
+            name: "Generic 'handler' name",
             code: "const handler = () => {}",
             errors: [
                 {
@@ -60,8 +49,8 @@ ruleTester.run("no-handler-suffix", rule, {
             output: "const handle = () => {}",
         },
 
-        // Case variations
         {
+            name: "Case variations",
             code: "const ClickHandler = () => {}",
             errors: [
                 {
@@ -71,8 +60,8 @@ ruleTester.run("no-handler-suffix", rule, {
             output: "const handleClick = () => {}",
         },
 
-        // Complex event name
         {
+            name: "Complex event name",
             code: "const formSubmitHandler = () => {}",
             errors: [
                 {
@@ -82,8 +71,8 @@ ruleTester.run("no-handler-suffix", rule, {
             output: "const handleFormSubmit = () => {}",
         },
 
-        // Named function expression (both names)
         {
+            name: "Named function expression (both names)",
             code: "const myHandler = function namedHandler() {}",
             errors: [
                 {
@@ -96,8 +85,8 @@ ruleTester.run("no-handler-suffix", rule, {
             output: "const handleMy = function handleNamed() {}",
         },
 
-        // Multiple handlers
         {
+            name: "Multiple handlers",
             code: `
         const clickHandler = () => {};
         const submitHandler = () => {};
@@ -118,26 +107,30 @@ ruleTester.run("no-handler-suffix", rule, {
     ],
 
     valid: [
-        // Valid 'handle' prefix
-        "const handleClick = () => {}",
+        { code: "const handleClick = () => {}", name: "Valid 'handle' prefix" },
         "function handleSubmit() {}",
         "const handleError = function() {}",
 
-        // Functions not ending with 'handler'
-        "const onClick = () => {}",
+        {
+            code: "const onClick = () => {}",
+            name: "Functions not ending with 'handler'",
+        },
         "const submitForm = () => {}",
         "const processClick = () => {}",
 
-        // 'handler' not as suffix
-        "const handlerFactory = () => {}",
+        {
+            code: "const handlerFactory = () => {}",
+            name: "'handler' not as suffix",
+        },
         "const createHandlerCookie = () => {}",
 
-        // Non-function variables
-        "const clickHandler = 'string value'",
+        {
+            code: "const clickHandler = 'string value'",
+            name: "Non-function variables",
+        },
     ],
 });
 
-// Test naming conflicts
 ruleTester.run("no-handler-suffix with naming conflicts", rule, {
     invalid: [
         {

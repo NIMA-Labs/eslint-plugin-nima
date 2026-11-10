@@ -6,23 +6,15 @@ export const enum Messages {
     FUNCTION_DISALLOWED = "FUNCTION_DISALLOWED",
 }
 
-export type Options = [
-    Partial<{
-        allowFunctions: string[];
-        disableFunctions: string[];
-        files: string[];
-        folders: string[];
-    }>[],
-];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description:
             "Disallow use of any functions in any files or folders unless explicitly allowed.",
@@ -31,7 +23,7 @@ export const config: {
     },
     messages: {
         [Messages.FUNCTION_DISALLOWED]:
-            "Do not use {{ fnName }} inside {{ filename }}.",
+            "Do not use {{ functionName }} inside {{ filename }}.",
     },
     schema: [
         {
@@ -79,4 +71,11 @@ export const config: {
     type: "problem",
 };
 
-export const defaultOptions: Options = [[]];
+export const defaultOptions: [
+    Partial<{
+        allowFunctions: string[];
+        disableFunctions: string[];
+        files: string[];
+        folders: string[];
+    }>[],
+] = [[]];

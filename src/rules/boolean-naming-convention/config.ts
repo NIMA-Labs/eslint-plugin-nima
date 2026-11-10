@@ -10,25 +10,15 @@ export const enum Messages {
     BAD_VARIABLE_BOOLEAN_PREFIX = "BAD_VARIABLE_BOOLEAN_PREFIX",
 }
 
-export type Options = [
-    Partial<{
-        allowedPrefixes: string[];
-        checkFunctions: boolean;
-        checkParameters: boolean;
-        checkProperties: boolean;
-        checkVariables: boolean;
-        ignore: string;
-    }>,
-];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description:
             "Enforces boolean variables to use appropriate prefixes (is, has, can, should, etc.)",
@@ -81,7 +71,16 @@ export const config: {
     ],
     type: "suggestion",
 };
-export const defaultOptions: Options = [
+export const defaultOptions: [
+    Partial<{
+        allowedPrefixes: string[];
+        checkFunctions: boolean;
+        checkParameters: boolean;
+        checkProperties: boolean;
+        checkVariables: boolean;
+        ignore: string;
+    }>,
+] = [
     {
         allowedPrefixes: DEFAULT_PREFIXES,
         checkFunctions: true,

@@ -1,14 +1,3 @@
-/*  Test file for params-naming-convention rule
-    Comments indicate the test number and purpose to help identify tests
-
-    Created by: Nima Labs
-    Last modified: 2025-10-01
-
-    Tests present: 20
-    Invalid tests: 6
-    Valid tests: 14
-*/
-
 import { Messages, rule } from "@rules/params-naming-convention";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 
@@ -16,8 +5,8 @@ const ruleTester = new RuleTester();
 
 ruleTester.run("params-naming-convention", rule, {
     invalid: [
-        // Arrow function with two parameters
         {
+            name: "Arrow function with two parameters",
             code: "const func = (param1: string, param2: number) => {}",
             errors: [
                 {
@@ -26,8 +15,8 @@ ruleTester.run("params-naming-convention", rule, {
             ],
         },
 
-        // Function declaration with multiple parameters
         {
+            name: "Function declaration with multiple parameters",
             code: "function testFunction(data: any, config: object, options: object) {}",
             errors: [
                 {
@@ -36,8 +25,8 @@ ruleTester.run("params-naming-convention", rule, {
             ],
         },
 
-        // Array method (non-reduce) with multiple parameters
         {
+            name: "Array method (non-reduce) with multiple parameters",
             code: "['test'].map((element, idx) => {})",
             errors: [
                 {
@@ -46,8 +35,8 @@ ruleTester.run("params-naming-convention", rule, {
             ],
         },
 
-        // Mixed ignored/non-ignored parameters
         {
+            name: "Mixed ignored/non-ignored parameters",
             code: "const handler = (e: Event, customParam: string) => {}",
             errors: [
                 {
@@ -58,37 +47,49 @@ ruleTester.run("params-naming-convention", rule, {
     ],
 
     valid: [
-        // Single parameter
-        "const func = (param: string) => {}",
+        {
+            code: "const func = (param: string) => {}",
+            name: "Single parameter",
+        },
 
-        // Object destructuring
-        "const func = ({param1, param2}: {param1: string, param2: number}) => {}",
+        {
+            code: "const func = ({param1, param2}: {param1: string, param2: number}) => {}",
+            name: "Object destructuring",
+        },
 
-        // All prefixed parameters
-        "const func = ($param1: string, $param2: number) => {}",
+        {
+            code: "const func = ($param1: string, $param2: number) => {}",
+            name: "All prefixed parameters",
+        },
 
-        // All ignored parameters
-        "const func = (e: Event, $callback: Function) => {}",
+        {
+            code: "const func = (e: Event, $callback: Function) => {}",
+            name: "All ignored parameters",
+        },
 
-        // Special case: second parameter named 'index'
-        "['test'].map((element, index) => {})",
+        {
+            code: "['test'].map((element, index) => {})",
+            name: "Special case: second parameter named 'index'",
+        },
 
-        // Reduce function (ignored by default)
-        "arr.reduce((acc, curr, idx, array) => {})",
+        {
+            code: "arr.reduce((acc, curr, idx, array) => {})",
+            name: "Reduce function (ignored by default)",
+        },
 
-        // No parameters
-        "const func = () => {}",
+        { code: "const func = () => {}", name: "No parameters" },
 
-        // Rest parameters only
-        "const func = (...args: any[]) => {}",
+        {
+            code: "const func = (...args: any[]) => {}",
+            name: "Rest parameters only",
+        },
     ],
 });
 
-// Test custom options
 ruleTester.run("params-naming-convention with custom options", rule, {
     invalid: [
-        // Custom allowedParameters
         {
+            name: "Custom allowedParameters",
             code: "const func = (a: string, b: number, c: boolean) => {}",
             errors: [
                 {
@@ -98,8 +99,8 @@ ruleTester.run("params-naming-convention with custom options", rule, {
             options: [{ allowedParameters: 2 }],
         },
 
-        // Custom ignorePrefixes
         {
+            name: "Custom ignorePrefixes",
             code: "const func = (custom: string, another: number) => {}",
             errors: [
                 {
@@ -116,20 +117,20 @@ ruleTester.run("params-naming-convention with custom options", rule, {
     ],
 
     valid: [
-        // Custom allowedParameters
         {
+            name: "Custom allowedParameters",
             code: "const func = (a: string, b: number, c: boolean) => {}",
             options: [{ allowedParameters: 3 }],
         },
 
-        // Custom ignorePrefixes
         {
+            name: "Custom ignorePrefixes",
             code: "const func = (_param1: string, _param2: number) => {}",
             options: [{ ignorePrefixes: ["_"] }],
         },
 
-        // Custom ignore list
         {
+            name: "Custom ignore list",
             code: "const func = (customIgnored: string, another: number) => {}",
             options: [
                 {
@@ -138,8 +139,8 @@ ruleTester.run("params-naming-convention with custom options", rule, {
             ],
         },
 
-        // Custom ignoreFunctions - your failing test case
         {
+            name: "Custom ignoreFunctions - your failing test case",
             code: "const customReduce = (acc: any, curr: any, idx: number) => {}",
             options: [{ ignoreFunctions: ["customReduce"] }],
         },

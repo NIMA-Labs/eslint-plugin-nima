@@ -1,14 +1,3 @@
-/* Test file for prefer-export-under-component rule
-    Comments indicate the test number and purpose to help identify tests
-
-    Created by: Nima Labs
-    Last modified: 2025-10-01
-
-    Tests present: 11
-    Invalid tests: 6
-    Valid tests: 5
-*/
-
 import { Messages, rule } from "@rules/prefer-export-under-component";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 

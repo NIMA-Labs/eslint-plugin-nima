@@ -6,16 +6,15 @@ export const enum Messages {
     BAD_HANDLER_NAME = "BAD_HANDLER_NAME",
 }
 
-export type Options = [];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description: "Suggests to use handleFn instead of fnHandler",
         recommended: true,
@@ -30,4 +29,4 @@ export const config: {
     type: "problem",
 };
 
-export const defaultOptions: Options = [];
+export const defaultOptions: [] = [];

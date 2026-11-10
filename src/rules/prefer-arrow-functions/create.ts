@@ -1,11 +1,11 @@
 import { AST_NODE_TYPES, type TSESTree } from "@typescript-eslint/utils";
 import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 
-import { Messages, type Options } from "./config";
+import { type defaultOptions, Messages } from "./config";
 
 export const create = (
-    context: RuleContext<Messages, Options>,
-    [options]: readonly Options[number][]
+    context: RuleContext<Messages, typeof defaultOptions>,
+    [options]: Readonly<typeof defaultOptions>
 ) => {
     const {
         allowAsync = true,

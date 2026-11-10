@@ -2,9 +2,11 @@ import { REACT_HOOKS } from "@constants/hooks";
 import { AST_NODE_TYPES, type TSESTree } from "@typescript-eslint/utils";
 import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 
-import { Messages, type Options } from "./config";
+import { type defaultOptions, Messages } from "./config";
 
-export const create = (context: RuleContext<Messages, Options>) => {
+export const create = (
+    context: RuleContext<Messages, typeof defaultOptions>
+) => {
     const sourceCode = context.sourceCode;
     const program = sourceCode.ast;
 

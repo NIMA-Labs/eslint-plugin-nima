@@ -1,14 +1,3 @@
-/*  Test file for prefer-react-fc rule
-    Comments indicate the test number and purpose to help identify tests
-
-    Created by: Nima Labs
-    Last modified: 2025-10-01
-
-    Tests present: 12
-    Invalid tests: 6
-    Valid tests: 6
-*/
-
 import { Messages, rule } from "@rules/prefer-react-fc";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 
@@ -28,8 +17,8 @@ const ruleTester = new RuleTester({
 
 ruleTester.run("prefer-react-fc", rule, {
     invalid: [
-        // Arrow function component without React.FC
         {
+            name: "Arrow function component without React.FC",
             code: "const Component = () => <div></div>",
             errors: [
                 {
@@ -38,8 +27,8 @@ ruleTester.run("prefer-react-fc", rule, {
             ],
         },
 
-        // Function declaration component without React.FC
         {
+            name: "Function declaration component without React.FC",
             code: "function MyComponent() { return <div>Hello</div>; }",
             errors: [
                 {
@@ -48,8 +37,8 @@ ruleTester.run("prefer-react-fc", rule, {
             ],
         },
 
-        // Function expression component without React.FC
         {
+            name: "Function expression component without React.FC",
             code: "const MyFunc = function() { return <div />; }",
             errors: [
                 {
@@ -58,8 +47,8 @@ ruleTester.run("prefer-react-fc", rule, {
             ],
         },
 
-        // Conditional rendering component without React.FC
         {
+            name: "Conditional rendering component without React.FC",
             code: `
         const ConditionalComponent = ({ condition }) => (
           condition ? <div>True</div> : <p>False</p>
@@ -72,8 +61,8 @@ ruleTester.run("prefer-react-fc", rule, {
             ],
         },
 
-        // Export default component without React.FC
         {
+            name: "Export default component without React.FC",
             code: "export default function DefaultComponent() { return <div />; }",
             errors: [
                 {
@@ -82,8 +71,8 @@ ruleTester.run("prefer-react-fc", rule, {
             ],
         },
 
-        // Exported arrow component without React.FC
         {
+            name: "Exported arrow component without React.FC",
             code: "export const ExportedComponent = () => <div />;",
             errors: [
                 {
@@ -94,22 +83,34 @@ ruleTester.run("prefer-react-fc", rule, {
     ],
 
     valid: [
-        // Arrow function component with React.FC
-        "const Component: React.FC = () => <div></div>",
+        {
+            code: "const Component: React.FC = () => <div></div>",
+            name: "Arrow function component with React.FC",
+        },
 
-        // Arrow function component with React.FunctionComponent
-        "const MyComponent: React.FunctionComponent = () => <div />",
+        {
+            code: "const MyComponent: React.FunctionComponent = () => <div />",
+            name: "Arrow function component with React.FunctionComponent",
+        },
 
-        // Arrow function component with FC alias
-        "const AnotherComponent: FC = () => <div />",
+        {
+            code: "const AnotherComponent: FC = () => <div />",
+            name: "Arrow function component with FC alias",
+        },
 
-        // Custom component type annotation
-        "const CustomComponent: PropsComponent = (props) => <div></div>",
+        {
+            code: "const CustomComponent: PropsComponent = (props) => <div></div>",
+            name: "Custom component type annotation",
+        },
 
-        // Function returning non-JSX (should not trigger)
-        "function notAComponent() { return 'hello'; }",
+        {
+            code: "function notAComponent() { return 'hello'; }",
+            name: "Function returning non-JSX (should not trigger)",
+        },
 
-        // Arrow function returning non-JSX (should not trigger)
-        "const notAComponent = () => 42;",
+        {
+            code: "const notAComponent = () => 42;",
+            name: "Arrow function returning non-JSX (should not trigger)",
+        },
     ],
 });

@@ -1,11 +1,11 @@
 import { createRule } from "@utility/core";
 
-import { config, defaultOptions, Messages, name, type Options } from "./config";
+import { config, defaultOptions, Messages, name } from "./config";
 import { create } from "./create";
 
 export { name };
 
-export const rule = createRule<Options, Messages>({
+export const rule = createRule<typeof defaultOptions, Messages>({
     create,
     defaultOptions,
     meta: config,

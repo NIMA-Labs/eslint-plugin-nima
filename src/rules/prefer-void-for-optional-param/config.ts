@@ -7,16 +7,15 @@ export const enum Messages {
     PREFER_VOID_FOR_OPTIONAL_PARAM = "PREFER_VOID_FOR_OPTIONAL_PARAM",
 }
 
-export type Options = [];
-
-type ExtendedPluginProperties = {
-    recommended: boolean;
-};
-
 export const config: {
-    docs: ExtendedPluginProperties &
-        RuleModule<Messages, Options>["meta"]["docs"];
-} & Omit<RuleModule<Messages, Options>["meta"], "defaultOptions"> = {
+    docs: { recommended: boolean } & RuleModule<
+        Messages,
+        typeof defaultOptions
+    >["meta"]["docs"];
+} & Omit<
+    RuleModule<Messages, typeof defaultOptions>["meta"],
+    "defaultOptions"
+> = {
     docs: {
         description:
             "Enforce void union type for optional parameters and destructure them in the function body",
@@ -34,4 +33,4 @@ export const config: {
     type: "suggestion",
 };
 
-export const defaultOptions: Options = [];
+export const defaultOptions: [] = [];
